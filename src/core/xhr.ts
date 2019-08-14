@@ -1,7 +1,6 @@
-import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from './types'
-import { parseHeaders } from './helpers/headers'
-import { createError } from './helpers/error'
-
+import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
+import { parseHeaders } from '../helpers/headers'
+import { createError } from '../helpers/error'
 
 function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -19,13 +18,15 @@ function xhr(config: AxiosRequestConfig): AxiosPromise {
       if (response.status >= 200 && response.status < 304) {
         resolve(response)
       } else {
-        reject(createError(
-          `Request failed with status code ${response.status}`,
-          config,
-          null,
-          request,
-          response
-        ))
+        reject(
+          createError(
+            `Request failed with status code ${response.status}`,
+            config,
+            null,
+            request,
+            response
+          )
+        )
       }
     }
     request.onreadystatechange = function() {
@@ -36,7 +37,8 @@ function xhr(config: AxiosRequestConfig): AxiosPromise {
         return
       }
       const responseHeaders = parseHeaders(request.getAllResponseHeaders())
-      const responseData = responseType && responseType !== 'text' ? request.response : request.responseText
+      const responseData =
+        responseType && responseType !== 'text' ? request.response : request.responseText
       const response: AxiosResponse = {
         data: responseData,
         status: request.status,
@@ -49,21 +51,13 @@ function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     request.onerror = function() {
-      reject(createError(
-        'Network Error',
-        config,
-        null,
-        request
-      ))
+      reject(createError('Network Error', config, null, request))
     }
 
     request.ontimeout = function() {
-      reject(createError(
-        `Timeout of ${config.timeout} ms exceeded`,
-        config,
-        'ECONNABORTED',
-        request
-      ))
+      reject(
+        createError(`Timeout of ${config.timeout} ms exceeded`, config, 'ECONNABORTED', request)
+      )
     }
 
     Object.keys(headers).forEach(name => {
