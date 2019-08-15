@@ -29,12 +29,12 @@ export function parseHeaders(headers: string): any {
     return parsed
   }
   headers.split('\r\n').forEach(line => {
-    let [key, value] = line.split(':')
+    let [key, ...vals] = line.split(':')
     key = key.trim().toLowerCase()
     if (!key) {
       return
     }
-    value = value && value.trim()
+    let value = vals && vals.join(':').trim()
     parsed[key] = value
   })
   return parsed
@@ -45,7 +45,6 @@ export function flattenHeaders(headers: any, method: Method) {
     return headers
   }
   headers = deepMerge(headers.common || {}, headers[method] || {}, headers)
-
   const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
 
   methodsToDelete.forEach(method => {
