@@ -126,6 +126,6 @@
     "webpack-hot-middleware": "^2.24.3"
   },
   "dependencies": {
-    "qs": "^6.7.0"
+    "qs": "^6.5.3"
   }
 }
